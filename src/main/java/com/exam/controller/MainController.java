@@ -28,42 +28,6 @@ public class MainController {
         this.goodsService = goodsService;
         this.cartService = cartService;
     }
-    
-    @GetMapping("/addGoods")
-    public String addGoods(@RequestParam(required = false) String gName,
-                           @RequestParam(required = false) String gCategory,
-                           @RequestParam(required = false) Double gPrice,
-                           HttpServletRequest request) {
-        
-        // 로그인된 사용자 확인
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userId = null;
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof User) {
-                userId = ((User) principal).getUsername(); // Spring Security의 UserDetails 사용
-            }
-        }
-
-        // 로그인된 사용자가 admin인 경우만 항목을 추가
-        if ("admin".equals(userId)) {
-            // 상품 추가 로직
-            GoodsDTO newGoods = new GoodsDTO();
-            newGoods.setgName(gName);
-            newGoods.setgCategory(gCategory);
-            newGoods.setgPrice(gPrice);
-            goodsService.addGoods(newGoods);
-
-            request.setAttribute("message", "상품이 추가되었습니다.");
-        } else {
-            request.setAttribute("message", "관리자만 상품을 추가할 수 있습니다.");
-        }
-
-        return "addGoods"; // 상품 추가 결과를 보여주는 JSP 페이지
-    }
-    
-    
     @GetMapping("/main")
     public String main(@RequestParam(required = false, defaultValue = "Dairy") String gCategory,
                        HttpServletRequest request, HttpSession session) {
