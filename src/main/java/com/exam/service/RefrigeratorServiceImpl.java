@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.exam.dto.GoodsDTO;
 import com.exam.dto.RefrigeratorDTO;
 import com.exam.mapper.RefrigeratorMapper;
 
@@ -44,3 +45,4 @@ public class RefrigeratorServiceImpl implements RefrigeratorService {
 	   return mapper.refrigeratorDeleteAll(list);
    }
 }
+
