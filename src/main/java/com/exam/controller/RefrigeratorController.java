@@ -88,20 +88,6 @@ public class RefrigeratorController {
 		return "redirect:refrigerator";
 	}
 
-	// 식재료 보유 현황 조회
-	@GetMapping("getRefrigeratorStock")
-	public String getRefrigeratorStock(@RequestParam String gCode, Model m) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		MemberDTO memberDTO = (MemberDTO) auth.getPrincipal();
-
-		String userid = memberDTO.getUserid();
-
-		int stock = refrigeratorService.getRefrigeratorStock(userid, gCode);
-		m.addAttribute("stock", stock);
-
-		return "/refrigerator";
-	}
-
 	// 냉장고 상품 수량 변경
 	@GetMapping("updateRefrigeratorStock")
 	public String updateRefrigeratorStock(@RequestParam int num, @RequestParam int amount) {
@@ -121,5 +107,16 @@ public class RefrigeratorController {
 		
 		return "refrigerator/refrigeratorUpdateSuccess";
 	}
-
+	
+	// 냉장고 상품 전체 삭제
+	@GetMapping("/refrigeratorDeleteAll")
+	public String refrigeratorDeleteAll(@RequestParam(name = "check", required = false) List<String> check) {
+		
+		if(check != null) {
+			logger.info("CustomLOG[REQUEST]: 냉장고에서 상품 삭제를 요청받음 삭제리스트: {}", check);
+			int n = refrigeratorService.refrigeratorDeleteAll(check);
+		}
+		logger.info("CustomLOG[SUCCESS]: 냉장고에서 상품이 정상적으로 삭제됨");
+		return "redirect:refrigerator";
+	}
 }
