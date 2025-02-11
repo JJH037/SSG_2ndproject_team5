@@ -53,7 +53,11 @@
 	 </delete>
 	 
 	   
-	 
+	     <!-- 모든 냉장고 상품의 재고 정보 조회 -->
+    <select id="getAllrStock" resultType="com.exam.dto.RefrigeratorDTO">
+        SELECT * FROM refrigerator
+    </select>
+
 	 
 	 
 </mapper>

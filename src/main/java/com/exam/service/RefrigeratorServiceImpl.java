@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.exam.dto.GoodsDTO;
 import com.exam.dto.RefrigeratorDTO;
 import com.exam.mapper.RefrigeratorMapper;
 
@@ -44,14 +45,12 @@ public class RefrigeratorServiceImpl implements RefrigeratorService {
       return mapper.updateRefrigeratorStock(dto);
    }
 
-	@Override
-	public List<RefrigeratorDTO> refrigeratorList(String userid) {
-		return mapper.refrigeratorList(userid);
-	}
-
-	@Override
-	public int refrigeratorDelete(int num) {
-		return mapper.refrigeratorDelete(num);
-	}
-
+   @Override
+   public List<RefrigeratorDTO> getAllrStock(){
+       return mapper.getAllrStock();  // 모든 상품의 재고 정보를 가져오는 메서드
+       
+       
+   }
+   
 }
+

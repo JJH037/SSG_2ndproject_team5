@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.exam.dto.GoodsDTO;
 import com.exam.dto.RefrigeratorDTO;
 
 @Mapper
@@ -15,4 +16,5 @@ public interface RefrigeratorMapper {
 	public int refrigeratorDelete(int num);
 	public int getRefrigeratorStock(String userid, String gCode);
 	public int updateRefrigeratorStock(RefrigeratorDTO dto);
+	public  List<RefrigeratorDTO> getAllrStock();
 }
