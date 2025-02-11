@@ -84,15 +84,7 @@
             <div class="col-md-3">
            <%-- 로그인된 사용자 ID 출력 --%>
 <%-- 디버깅: 세션에 저장된 값 확인 --%>
-<p>세션 userId 값: ${sessionScope.userId}</p>
 
-<c:if test="${not empty sessionScope.userId}">
-    <p>로그인된 아이디: <strong>${sessionScope.userId}</strong></p>
-</c:if>
-
-<c:if test="${empty sessionScope.userId}">
-    <p>로그인되지 않았습니다.</p>
-</c:if>
 
 
             
