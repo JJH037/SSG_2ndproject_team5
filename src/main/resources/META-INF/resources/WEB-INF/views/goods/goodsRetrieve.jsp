@@ -40,7 +40,7 @@
 	
 	  <div class="row">    
 		<div class="card" style="width:25rem;">
-		  <img src="images/items/${goodsRetrieve.gImage}.png" class="card-img-top" alt="...">
+		  <img src="static/images/items/${goodsRetrieve.gImage}.png" class="card-img-top" alt="...">
 		  <div class="card-body">
 		    <h6 class="card-title">
 		        <span class="fw-bold">제품코드:</span>  
