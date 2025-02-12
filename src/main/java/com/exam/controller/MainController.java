@@ -7,6 +7,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.exam.dto.GoodsDTO;
@@ -17,7 +19,6 @@ import com.exam.service.GoodsService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
 @Controller
 public class MainController {
 
@@ -28,6 +29,7 @@ public class MainController {
         this.goodsService = goodsService;
         this.cartService = cartService;
     }
+
     @GetMapping("/main")
     public String main(@RequestParam(required = false, defaultValue = "Dairy") String gCategory,
                        HttpServletRequest request, HttpSession session) {
@@ -38,10 +40,11 @@ public class MainController {
         // 로그인된 사용자 확인
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = null;
+        boolean isAdmin = false;
 
         if (authentication != null && authentication.isAuthenticated()) {
             Object principal = authentication.getPrincipal();
-            
+
             if (principal instanceof MemberDTO) {
                 userId = ((MemberDTO) principal).getUserid(); // MemberDTO에서 userid 가져오기
             } else if (principal instanceof User) {
@@ -49,13 +52,20 @@ public class MainController {
             } else if (principal instanceof String) {
                 userId = (String) principal; // String 타입인 경우
             }
-            
-            session.setAttribute("userId", userId); // 세션에 저장하여 JSP에서도 사용 가능
+
+            // 사용자 ID를 세션에 저장하여 JSP에서도 사용 가능
+            session.setAttribute("userId", userId);
+
+            // admin 여부 체크
+            if ("admin".equals(userId)) {
+                isAdmin = true;
+            }
         }
 
         // 상품 리스트를 request에 설정
         request.setAttribute("goodsList", goodsList);
         request.setAttribute("userId", userId); // request에도 저장
+        request.setAttribute("isAdmin", isAdmin); // admin 여부를 request에 저장
 
         if (userId != null) {
             // 냉장고 재고 부족 목록 조회
@@ -76,5 +86,4 @@ public class MainController {
 
         return "main";
     }
-
 }
