@@ -1,15 +1,4 @@
-use team5;
-
-create table goods (
-  gCode varchar(20) not null,
-  gCategory varchar(20) not null,
-  gName varchar(20) not null,
-  gContent varchar(4000),
-  gPrice int not null,
-  gImage varchar(20) not null,
-  stock int default(99) not null,
-  primary key (gCode)
-);
+delete from goods;
 
 insert into goods (gCode, gCategory, gName, gContent, gPrice, gImage, stock) values ('DA-0001', 'Dairy', '슬라이스 치즈', '에이클래스 체다 슬라이스치즈 210g (30g x 7)', '3980', 'DA-0001', '99');
 insert into goods (gCode, gCategory, gName, gContent, gPrice, gImage, stock) values ('DA-0002', 'Dairy', '달걀', '[당일산란/당일발송] 가농 금계란 1+등급 골드 비타민특란 40구(무항생제)', '17800', 'DA-0002', '99');
