@@ -34,8 +34,15 @@ public class MainController {
     public String main(@RequestParam(required = false, defaultValue = "Dairy") String gCategory,
                        HttpServletRequest request, HttpSession session) {
 
-        // 특정 카테고리의 상품 목록 조회
-        List<GoodsDTO> goodsList = goodsService.goodsList(gCategory);
+    	List<GoodsDTO> goodsList;
+    	
+    	if (gCategory.equals("All")) {
+    		// RequestParam이 없는 경우 = 전체 카테고리 조회하기
+    		goodsList = goodsService.getAllStock();
+    	} else {
+    		// RequestParam이 있는 경우 = 해당 카테고리 조회
+    		goodsList = goodsService.goodsList(gCategory);
+    	}
 
         // 로그인된 사용자 확인
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
