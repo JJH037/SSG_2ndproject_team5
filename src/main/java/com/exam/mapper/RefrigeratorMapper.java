@@ -16,5 +16,6 @@ public interface RefrigeratorMapper {
 	public int refrigeratorDelete(int num);
 	public int updateRefrigeratorStock(RefrigeratorDTO dto);
 	public int refrigeratorDeleteAll(List<String> list);
+	public int checkProductExist(RefrigeratorDTO dto);
 
 }

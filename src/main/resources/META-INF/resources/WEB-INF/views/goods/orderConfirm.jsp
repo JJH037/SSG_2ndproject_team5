@@ -1,10 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
 <form name="myForm">
 	<div class="container">
 		<div class="row mb-3">
-			<label class="col-sm-2 col-form-label fs-4">주문 상품 확인</label>
+			<label class="col-sm-4 col-form-label fs-4">주문 상품 확인</label>
 		</div>
 		<hr>
 		<div>
@@ -23,8 +22,7 @@
 				<tbody>
 					<tr>
 						<td>${cDTO.num}</td>
-						<td><img src="images/items/${cDTO.goodsList[0].gImage}.png"
-							width="50" height="50"></td>
+						<td><img src="images/items/${cDTO.goodsList[0].gImage}.png" width="50" height="50"></td>
 						<td>${cDTO.gCode}</td>
 						<td>${cDTO.goodsList[0].gPrice}</td>
 						<td>${cDTO.gAmount}</td>

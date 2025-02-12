@@ -14,6 +14,12 @@
 		insert into refrigerator (userid, gCode, gCategory, gName, rStock)
 		values (#{userid}, #{gCode}, #{gCategory}, #{gName}, #{rStock})
 	</insert>
+	
+	<select id="checkProductExist" parameterType="RefrigeratorDTO" resultType="int">
+		select count(*)
+		from refrigerator
+		where userid = #{userid} AND gCode = #{gCode}
+	</select>
 
 	<resultMap id="refrigeratorResultMap" type="RefrigeratorDTO">
 		<id property="num" column="num" />

@@ -21,6 +21,11 @@ public class RefrigeratorServiceImpl implements RefrigeratorService {
    @Override
    @Transactional
    public int refrigeratorAdd(RefrigeratorDTO dto) {
+	  int count = mapper.checkProductExist(dto);
+	  
+	  if (count > 0) {
+		  return 0;
+	}
       return mapper.refrigeratorAdd(dto);
    }
 

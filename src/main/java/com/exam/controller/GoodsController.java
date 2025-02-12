@@ -8,17 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.exam.dto.GoodsDTO;
 import com.exam.service.GoodsService;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 @Controller
-@SessionAttributes("gCode")
 public class GoodsController {
 
     private final GoodsService goodsService;
@@ -27,17 +23,24 @@ public class GoodsController {
         this.goodsService = goodsService;
     }
 
+    // 상품 추가 폼 페이지로 이동 (GET 요청)
     @GetMapping("/addGoods")
     public String showAddGoodsPage() {
-        return "goods/addGoods";  // /WEB-INF/views/goods/addgoods.jsp
+        return "addGoods"; // addGoods.jsp 페이지로 이동
     }
+
+    
+    
+    
+    
     
     @PostMapping("/addGoods")
     public String addGoods(@ModelAttribute GoodsDTO goodsDTO,
-                           @RequestParam(value = "fileImage", required = false) MultipartFile file,
-                           HttpServletRequest request) {
+                           @RequestParam(value = "fileImage", required = false) MultipartFile file) {
+
+        // 상품 코드가 없으면 폼으로 리디렉션
         if (goodsDTO.getgCode() == null || goodsDTO.getgCode().isEmpty()) {
-            return "redirect:/addGoods"; // 상품 코드가 없으면 다시 폼으로 이동
+            return "redirect:/addGoods";
         }
 
         try {
@@ -47,8 +50,8 @@ public class GoodsController {
                 return "redirect:/addGoods";
             }
 
-            // 업로드 경로 설정 (파일을 C:/upload/에 저장)
-            String uploadDir = "C:/upload/images/items"; // C:/upload/images/items 폴더에 저장
+            // 파일을 C:/upload/ 디렉토리에 저장
+            String uploadDir = "C:/upload/images/items/";  // C:/upload/images/items/ 폴더에 저장
             File dir = new File(uploadDir);
             if (!dir.exists()) {
                 dir.mkdirs(); // 경로가 없다면 생성
@@ -57,11 +60,11 @@ public class GoodsController {
             // 사용자가 입력한 gImage 값 사용 (파일명 지정)
             String customFilename = goodsDTO.getgImage();
 
-            // 파일 확장자 추출 (예: .png, .jpg 등)
+            // 파일 확장자 추출
             String originalFilename = file.getOriginalFilename();
             String extension = "";
             if (originalFilename != null && originalFilename.contains(".")) {
-                extension = originalFilename.substring(originalFilename.lastIndexOf(".")); // 확장자 추출
+                extension = originalFilename.substring(originalFilename.lastIndexOf("."));
             }
 
             // 최종 저장될 파일명: 사용자가 입력한 gImage + 확장자
