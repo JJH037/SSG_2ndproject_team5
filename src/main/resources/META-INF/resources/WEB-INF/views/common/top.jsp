@@ -28,7 +28,7 @@
 
 				<!-- 로그인된 경우 화면 -->
 				<sec:authorize access="isAuthenticated()">
-					<ul class="navbar-nav"><li class="nav-item">${login.username}</li>
+					<ul class="navbar-nav"><li class="nav-item nav-link">${login.username} 님</li>
 						<li class="nav-item"><a class="nav-link" href="logout">Logout</a></li>
 						<li class="nav-item"><a class="nav-link" href="mypage">mypage</a></li>
 						<li class="nav-item"><a class="nav-link" href="cartList">cartList</a></li>
