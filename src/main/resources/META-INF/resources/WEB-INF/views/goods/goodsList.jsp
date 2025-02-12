@@ -7,7 +7,8 @@
     <c:forEach var="dto" items="${goodsList}">
       <div class="col border border-dark m-4 w-80">
         <a href="goodsRetrieve?gCode=${dto.gCode}"> 
-          <img src="${pageContext.request.contextPath}/images/items/${dto.gImage}.png" width="200">
+          <!-- 이미지 경로 수정 -->
+          <img src="static/images/items/${dto.gImage}.png" width="200">
         </a>
          <div class="mt-4 fs-6">${dto.gName}</div>
          <div class="mt-2 fs-6">${dto.gContent}</div>
@@ -15,11 +16,6 @@
       </div>
     </c:forEach>  
 
-    <!-- admin 아이디인 경우에만 상품 추가 버튼 활성화 -->
-    <c:if test="${principal.username == 'admin'}">
-     
-    </c:if> <form action="${pageContext.request.contextPath}/addGoods" method="POST">
-        <button type="submit" class="btn btn-primary">상품 추가</button>
-      </form>
+
   </div>
 </div>

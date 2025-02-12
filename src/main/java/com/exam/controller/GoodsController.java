@@ -2,8 +2,6 @@ package com.exam.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,64 +15,92 @@ import org.springframework.web.servlet.ModelAndView;
 import com.exam.dto.GoodsDTO;
 import com.exam.service.GoodsService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Controller
 @SessionAttributes("gCode")
 public class GoodsController {
 
-	private final GoodsService goodsService;
+    private final GoodsService goodsService;
 
-	public GoodsController(GoodsService goodsService) {
-		this.goodsService = goodsService;
-	}
+    public GoodsController(GoodsService goodsService) {
+        this.goodsService = goodsService;
+    }
 
-	// 상품 추가 폼 페이지로 이동
-	@GetMapping("/addGoods")
-	public String showAddGoodsPage() {
-		return "addGoods"; // addGoods.jsp 페이지로 이동
-	}
+    @GetMapping("/addGoods")
+    public String showAddGoodsPage() {
+        return "goods/addGoods";  // /WEB-INF/views/goods/addgoods.jsp
+    }
+    
+    @PostMapping("/addGoods")
+    public String addGoods(@ModelAttribute GoodsDTO goodsDTO,
+                           @RequestParam(value = "fileImage", required = false) MultipartFile file,
+                           HttpServletRequest request) {
+        if (goodsDTO.getgCode() == null || goodsDTO.getgCode().isEmpty()) {
+            return "redirect:/addGoods"; // 상품 코드가 없으면 다시 폼으로 이동
+        }
 
-	
-	
-	
-	
-	@PostMapping("/addGoods")
-	public String addGoods(@ModelAttribute GoodsDTO goodsDTO) {
-	    if (goodsDTO.getgCode() == null || goodsDTO.getgCode().isEmpty()) {
-	        // gCode가 null이거나 빈 값일 경우 처리할 로직
-	        return "redirect:/addGoods"; // 다시 상품 추가 페이지로 리다이렉트
-	    }
+        try {
+            // 파일이 업로드되지 않았을 경우 예외 처리
+            if (file == null || file.isEmpty()) {
+                System.out.println("파일이 업로드되지 않았습니다.");
+                return "redirect:/addGoods";
+            }
 
-	    // 상품 추가 서비스 호출
-	    goodsService.addGoods(goodsDTO); 
-	    
-	    return "redirect:/main"; // 상품 목록 페이지로 리다이렉트
-	}
+            // 업로드 경로 설정 (파일을 C:/upload/에 저장)
+            String uploadDir = "C:/upload/images/items"; // C:/upload/images/items 폴더에 저장
+            File dir = new File(uploadDir);
+            if (!dir.exists()) {
+                dir.mkdirs(); // 경로가 없다면 생성
+            }
 
-	
-	
-	
-	
+            // 사용자가 입력한 gImage 값 사용 (파일명 지정)
+            String customFilename = goodsDTO.getgImage();
 
-	// 상품 상세 조회
-	@GetMapping("/goodsRetrieve")
-	public ModelAndView goodsRetrieve(@RequestParam(required = false) String gCode, Model m) {
-		// gCode가 없으면 세션에서 가져옵니다.
-		if (gCode == null) {
-			gCode = (String) m.getAttribute("gCode");
-		}
+            // 파일 확장자 추출 (예: .png, .jpg 등)
+            String originalFilename = file.getOriginalFilename();
+            String extension = "";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                extension = originalFilename.substring(originalFilename.lastIndexOf(".")); // 확장자 추출
+            }
 
-		// 상품목록에서 자세히보기로 요청한 경우에 gCode를 세션에 저장.
-		m.addAttribute("gCode", gCode);
+            // 최종 저장될 파일명: 사용자가 입력한 gImage + 확장자
+            String finalFilename = customFilename + extension;
 
-		GoodsDTO dto = goodsService.goodsRetrieve(gCode);
+            // 파일 저장
+            File saveFile = new File(uploadDir, finalFilename);
+            file.transferTo(saveFile);
 
-		ModelAndView mav = new ModelAndView();
-		// 모델 저장
-		mav.addObject("goodsRetrieve", dto);
+            // 파일명을 DTO에 저장 (확장자 제외된 파일명만 저장)
+            goodsDTO.setgImage(customFilename);  // 확장자 제외된 파일명만 저장
 
-		// 뷰 저장
-		mav.setViewName("goodsRetrieve");
+            // DB에 상품 추가
+            goodsService.addGoods(goodsDTO);
 
-		return mav;
-	}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/main"; // 성공 시 메인 페이지로 이동
+    }
+
+    // 상품 상세 조회
+    @GetMapping("/goodsRetrieve")
+    public ModelAndView goodsRetrieve(@RequestParam(required = false) String gCode, Model m) {
+        // gCode가 없으면 세션에서 가져옴
+        if (gCode == null) {
+            gCode = (String) m.getAttribute("gCode");
+        }
+
+        // 상품 목록에서 자세히 보기 요청 시 gCode를 세션에 저장
+        m.addAttribute("gCode", gCode);
+
+        GoodsDTO dto = goodsService.goodsRetrieve(gCode);
+
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("goodsRetrieve", dto);
+        mav.setViewName("goodsRetrieve");
+
+        return mav;
+    }
 }
