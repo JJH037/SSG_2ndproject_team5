@@ -2,15 +2,14 @@ package com.exam.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,9 +35,8 @@ public class MainController {
 
     // 메인 페이지에 상품 목록과 재고 알림을 출력하는 메서드
     @GetMapping("/main")
-    public String main(@RequestParam(required = false, defaultValue = "All") String gCategory,
-                       HttpServletRequest request, HttpSession session,
-                       Model model) {
+    public String main(@RequestParam(required = false, defaultValue = "Dairy") String gCategory,
+                       HttpServletRequest request, HttpSession session) {
 
     	List<GoodsDTO> goodsList;
     	
@@ -66,14 +64,8 @@ public class MainController {
                 userId = (String) principal; // String 타입인 경우
             }
 
-            // 로그인된 사용자 정보를 model에 전달
-            model.addAttribute("login", new User(userId, "", new ArrayList<>())); // User 객체 생성
-            
-            // 세션과 request에 사용자 정보 저장
+            // 사용자 ID를 세션에 저장하여 JSP에서도 사용 가능
             session.setAttribute("userId", userId);
-            request.setAttribute("userId", userId);
-            request.setAttribute("isAdmin", isAdmin);
-
 
             // admin 여부 체크
             if ("admin".equals(userId)) {
@@ -83,6 +75,8 @@ public class MainController {
 
         // 상품 리스트를 request에 설정
         request.setAttribute("goodsList", goodsList);
+        request.setAttribute("userId", userId); // request에도 저장
+        request.setAttribute("isAdmin", isAdmin); // admin 여부를 request에 저장
 
         if (userId != null) {
             // 냉장고 재고 부족 목록 조회
